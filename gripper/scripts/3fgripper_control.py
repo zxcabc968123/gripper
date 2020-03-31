@@ -34,7 +34,7 @@ class Gripper:
         joint=joint
         return joint_now.position[joint]
 
-    def get_ratating_state(self):
+    def get_rotating_state(self):
         joint_now=rospy.wait_for_message('/3fgripper/joint_states',JointState)
         return joint_now.position[3]
 ###############################################
@@ -107,24 +107,27 @@ class Gripper:
         pub5=rospy.Publisher(self.r_finger_joint,Float64,queue_size=10)
         #rate=rospy.Rate(self.publisher_rate)
         rate=rospy.Rate(100)
-        roating_ang=self.get_ratating_state()
+        roating_ang=self.get_rotating_state()
         rospy.loginfo('Rotating now =%.2f',roating_ang)
         if ang>roating_ang:
-            while ang>=roating_ang:
+            while ang>roating_ang:
                 pub4.publish(roating_ang)
                 pub5.publish(roating_ang)
                 rospy.sleep(0.01)
+                rospy.loginfo('now Rotating111111111111111111111=%.2f',roating_ang)
                 roating_ang=roating_ang+0.02
             pub4.publish(ang)
             pub5.publish(ang)
         elif ang<roating_ang:
-            while ang<=roating_ang:
+            while ang<roating_ang:
                 pub4.publish(roating_ang)
                 pub5.publish(roating_ang)
                 rospy.sleep(0.01)
+                rospy.loginfo('now Rotating111111111111111111111=%.2f',roating_ang)
                 roating_ang=roating_ang-0.02
             pub4.publish(ang)
             pub5.publish(ang)
+        rospy.sleep(1)
         rospy.loginfo('End Rotating=%.2f',roating_ang)
 ####################################################################ALL
     def send_finger_all(self,direction):
@@ -287,6 +290,7 @@ if __name__=='__main__':
         #a.send_finger_one('m',1)
         #a.send_finger_one('m',2)
         a.send_rotating_command(0)
+        a.send_rotating_command(3.14)
         a.send_finger_all(1)
         a.send_finger_all(2)
         a.send_rotating_command(1.57)

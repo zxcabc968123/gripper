@@ -13,7 +13,7 @@
  <material>Gazebo/Gray</material>
  <mu1 value="0.2"/>
  <mu2 value="0.2"/> 
- <selfCollide>false</selfCollide> 
+ <selfCollide>flase</selfCollide> 
  </gazebo>
 
  <gazebo reference="l_finger_link">

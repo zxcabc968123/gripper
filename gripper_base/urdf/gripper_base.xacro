@@ -110,6 +110,7 @@
       link="l_finger_link" />
     <axis
       xyz="0 0 -1" />
+    <limit effort="60" velocity="100000" lower="0" upper="3.14" />
   </joint>
   <link
     name="r_finger_link">
@@ -165,6 +166,7 @@
       xyz="0 0 -1" /> -->
     <axis
       xyz="0 0 1" />  
+    <limit effort="60" velocity="10000" lower="0" upper="3.14" />
       
   </joint>
 
