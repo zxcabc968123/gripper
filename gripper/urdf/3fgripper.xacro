@@ -6,7 +6,7 @@
     <link name="world"/>
 
   <xacro:gripper_base parent="world" child="gripper_base_link">
-    <origin xyz="0 0 0" rpy="0 0 0"  />
+    <origin xyz="0 0 0.22" rpy="3.14 0 0"  />
   </xacro:gripper_base>
 
   <xacro:fingertest side="r" parent="r_finger_link" child="r_base_link">

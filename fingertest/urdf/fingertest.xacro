@@ -271,9 +271,8 @@
                 <frameName>world</frameName>
             </plugin>
     </sensor>
-    <material>Gazebo/Red</material>
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
+
+   
     <gravity>true</gravity>
     </gazebo>
 
@@ -293,9 +292,8 @@
                 <frameName>world</frameName>
             </plugin>
     </sensor>
-    <material>Gazebo/Red</material>
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
+
+    
     <gravity>true</gravity>
     </gazebo>
 
@@ -316,9 +314,8 @@
                 <frameName>world</frameName>
             </plugin>
     </sensor>
-    <material>Gazebo/Red</material>
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
+
+   
     <gravity>true</gravity>
 </gazebo>
 

@@ -5,6 +5,7 @@ import sys
 import numpy as np
 from std_msgs.msg import Float64
 from sensor_msgs.msg import JointState
+from gazebo_msgs.msg import ContactsState
 class Gripper:
     def __init__(self): 
         self.publisher_rate=100
@@ -24,7 +25,7 @@ class Gripper:
         self.r_finger_joint='/3fgripper/r_finger_joint_position_controller/command'
 
         rospy.init_node('gripper_control',anonymous=False) #初始化node    anonymous=True  在node名稱後加入亂碼    避免相同名稱的node踢掉彼此
-
+        self.l_Link3_bumper=False
     # def command_convert(self):
     #     direction=float(sys.argv[1])
     #     return direction
@@ -37,6 +38,17 @@ class Gripper:
     def get_rotating_state(self):
         joint_now=rospy.wait_for_message('/3fgripper/joint_states',JointState)
         return joint_now.position[3]
+    
+    def get_bumper_state(self,Link_bumper):
+        bumper_now=rospy.wait_for_message(Link_bumper,ContactsState,timeout=1)
+        #rospy.loginfo('00000000000000000')
+        #print(bumper_now.states)
+        # for state in bumper_now.states:
+        if not bumper_now.states:
+            self.l_Link3_bumper=False
+        else:
+            self.l_Link3_bumper=True
+
 ###############################################
     def send_finger_one(self,one,direction):
         if one=='r':
@@ -229,8 +241,10 @@ class Gripper:
             joint2_ang=self.get_gripper_state(1)
             joint3_ang=self.get_gripper_state(2)
             rospy.loginfo('Joint angle now = [ %.2f %.2f %.2f ]' ,joint1_ang,joint2_ang,joint3_ang)
-            while joint1_ang>-1.221:
-
+            while joint1_ang>-1.221 and self.l_Link3_bumper==False:
+                ###
+                self.get_bumper_state('l_Link3_bumper')
+                ###
                 pub1.publish(joint1_ang)
                 pub2.publish(joint2_ang)
                 pub3.publish(joint3_ang)
@@ -242,7 +256,10 @@ class Gripper:
                 rospy.sleep(0.01)
                 joint1_ang=joint1_ang-0.01
                 joint3_ang=joint3_ang+0.01
-            while joint2_ang>-1.57:
+            while joint2_ang>-1.57 and self.l_Link3_bumper==False:
+                ###
+                self.get_bumper_state('l_Link3_bumper')
+                ###
                 pub2.publish(joint2_ang)
 
                 pub5.publish(joint2_ang)
@@ -257,6 +274,9 @@ class Gripper:
             rospy.loginfo('Joint angle now = [ %.2f %.2f %.2f ]' ,joint1_ang,joint2_ang,joint3_ang)
             
             while joint2_ang<0:
+                ###
+                self.get_bumper_state('l_Link3_bumper')
+                ###
                 pub1.publish(joint1_ang)
                 pub2.publish(joint2_ang)
                 pub3.publish(joint3_ang)
@@ -268,6 +288,9 @@ class Gripper:
                 rospy.sleep(0.01)
                 joint2_ang=joint2_ang+0.01
             while joint1_ang<0:
+                ###
+                self.get_bumper_state('l_Link3_bumper')
+                ###
                 pub1.publish(joint1_ang)
                 pub2.publish(joint2_ang)
                 pub3.publish(joint3_ang)
@@ -287,16 +310,19 @@ if __name__=='__main__':
         #a.send_finger_one('r',2)
         #a.send_finger_one('m',1)
         #a.send_finger_one('m',2)
+        # a.send_rotating_command(0)
+        # a.send_finger_all(1)
+        # a.send_finger_all(2)
         a.send_rotating_command(0)
-        a.send_rotating_command(3.14)
-        a.send_finger_all(1)
-        a.send_finger_all(2)
         a.send_rotating_command(1.57)
-        a.send_finger_one('m',1)
         a.send_finger_two(1)
-        a.send_finger_two(2)
-        a.send_finger_one('m',2)
-        a.send_rotating_command(0)
+        #a.send_finger_two(1)
+        #a.send_finger_one('m',2)
+        #a.send_finger_two(2)
+        #a.send_rotating_command(1.57)
+        # a.send_finger_two(2)
+        # a.send_finger_one('m',2)
+        # a.send_rotating_command(0)
         #a.send_rotating_command(1)
         rospy.loginfo('123')
     except  rospy.ROSInterruptException:
